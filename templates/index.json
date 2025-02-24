@@ -1,0 +1,9 @@
+{
+    "sections": {
+        "below-header-section": {
+            "type": "below-header-section",
+            "settings": {}
+        }
+    },
+    "order": ["below-header-section"]
+}
