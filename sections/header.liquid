@@ -28,13 +28,17 @@
     }
 
     .overlay {
-        position: absolute;
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
         padding: 15px 40px;
     }
+
+    /* .overlay:hover {
+        background-color: white;
+    } */
 
     .logo {
         font-family: 'AustrisaDemo', sans-serif;
@@ -77,6 +81,7 @@
         height: 28px;
         cursor: pointer;
         transition: transform 0.2s ease-in-out;
+        color: white;
     }
 
     .nav-link-icons svg:hover {
@@ -95,33 +100,28 @@
     /* Mega Menu Styles */
     .mega-menu {
         position: absolute;
-        top: 0;
+        top: 100%;
         left: 0;
         width: 100%;
         background-color: #ffffff;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-100%);
+        transform: translateY(-10px);
         transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
         padding: 20px;
     }
 
-    .shop-menu:hover+.mega-menu,
+    .shop-menu-wrapper:hover .mega-menu,
     .mega-menu:hover {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+        background-color: white;
     }
 
-    .mega-menu {
-        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    }
-
-    .nav-links:hover .mega-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
+    .shop-menu-wrapper:hover .overlay {
+        background-color: white;
     }
 
     .mega-menu-content {
@@ -166,25 +166,31 @@
         <h1 class="logo">ACL</h1>
         <div class="nav-links">
             <a href="#">Home</a>
-            <a href="#" class="shop-menu">Shop {% render 'downarrow' %}</a>
-            <div class="mega-menu">
-                <div class="mega-menu-content">
-                    <div class="mega-menu-section">
-                        <h3>Categories</h3>
-                        <a href="#">New Arrivals</a>
-                        <a href="#">Best Sellers</a>
-                        <a href="#">Clothing</a>
-                        <a href="#">Accessories</a>
-                    </div>
-                    <div class="mega-menu-section">
-                        <h3>Featured</h3>
-                        <a href="#">Spring Collection</a>
-                        <a href="#">Limited Edition</a>
-                        <a href="#">Gift Ideas</a>
+            <div class="shop-menu-wrapper">
+                <a href="#" class="shop-menu">Shop <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6"></path>
+                </svg></a>
+                <div class="mega-menu">
+                    <div class="mega-menu-content">
+                        <div class="mega-menu-section">
+                            <h3>Categories</h3>
+                            <a href="#">New Arrivals</a>
+                            <a href="#">Best Sellers</a>
+                            <a href="#">Clothing</a>
+                            <a href="#">Accessories</a>
+                        </div>
+                        <div class="mega-menu-section">
+                            <h3>Featured</h3>
+                            <a href="#">Spring Collection</a>
+                            <a href="#">Limited Edition</a>
+                            <a href="#">Gift Ideas</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <a href="#">Collections {% render 'downarrow' %}</a>
+            <a href="#">Collections <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg></a>
             <a href="#">Contact</a>
         </div>
         <div class="nav-link-icons">
@@ -202,3 +208,37 @@
         </div>
     </div>
 </section>
+
+<script>
+    // Get the elements
+    const shopMenu = document.querySelector('.shop-menu');
+    const overlay = document.querySelector('.overlay');
+    const logo = document.querySelector('.logo');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const navIcons = document.querySelectorAll('.nav-link-icons svg');
+    const shopDownArrow = document.querySelector('.shop-menu svg'); // Assuming downarrow is an SVG in shop-menu
+    const collectionDownArrow = document.querySelector('.nav-links a[href="#"]:nth-child(3) svg'); // Adjusted selector for Collections downarrow
+
+    // Add event listeners for mouse enter and leave
+    shopMenu.addEventListener('mouseenter', () => {
+        overlay.style.backgroundColor = 'white'; // Change overlay background to white on hover
+        logo.style.color = 'black'; // Change logo color to black
+        navLinks.forEach(link => link.style.color = 'black'); // Change nav link colors to black
+        navIcons.forEach(icon => icon.style.color = 'black'); // Change icon colors to black
+        
+        // Change both down arrows to black
+        if (shopDownArrow) shopDownArrow.style.stroke = 'black'; // Change shop down arrow color to black
+        if (collectionDownArrow) collectionDownArrow.style.stroke = 'black'; // Change collections down arrow color to black
+    });
+
+    shopMenu.addEventListener('mouseleave', () => {
+        overlay.style.backgroundColor = ''; // Reset overlay background when not hovering
+        logo.style.color = ''; // Reset logo color
+        navLinks.forEach(link => link.style.color = ''); // Reset nav link colors
+        navIcons.forEach(icon => icon.style.color = ''); // Reset icon colors
+        
+        // Reset both down arrows to their original color
+        if (shopDownArrow) shopDownArrow.style.stroke = ''; // Reset shop down arrow color
+        if (collectionDownArrow) collectionDownArrow.style.stroke = ''; // Reset collections down arrow color
+    });
+</script>
