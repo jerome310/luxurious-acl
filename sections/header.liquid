@@ -66,6 +66,19 @@
         align-items: center;
     }
 
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 100%;
+        height: 2px;
+        background-color: white;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease-in-out;
+    }
+
     .nav-links a:hover::after {
         transform: scaleX(1);
     }
@@ -167,9 +180,10 @@
         <div class="nav-links">
             <a href="#">Home</a>
             <div class="shop-menu-wrapper">
-                <a href="#" class="shop-menu">Shop <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M6 9l6 6 6-6"></path>
-                </svg></a>
+                <a href="#" class="shop-menu">Shop <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24">
+                        <path d="M6 9l6 6 6-6"></path>
+                    </svg></a>
                 <div class="mega-menu">
                     <div class="mega-menu-content">
                         <div class="mega-menu-section">
@@ -189,8 +203,8 @@
                 </div>
             </div>
             <a href="#">Collections <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M6 9l6 6 6-6"></path>
-            </svg></a>
+                    <path d="M6 9l6 6 6-6"></path>
+                </svg></a>
             <a href="#">Contact</a>
         </div>
         <div class="nav-link-icons">
@@ -225,7 +239,7 @@
         logo.style.color = 'black'; // Change logo color to black
         navLinks.forEach(link => link.style.color = 'black'); // Change nav link colors to black
         navIcons.forEach(icon => icon.style.color = 'black'); // Change icon colors to black
-        
+
         // Change both down arrows to black
         if (shopDownArrow) shopDownArrow.style.stroke = 'black'; // Change shop down arrow color to black
         if (collectionDownArrow) collectionDownArrow.style.stroke = 'black'; // Change collections down arrow color to black
@@ -236,7 +250,7 @@
         logo.style.color = ''; // Reset logo color
         navLinks.forEach(link => link.style.color = ''); // Reset nav link colors
         navIcons.forEach(icon => icon.style.color = ''); // Reset icon colors
-        
+
         // Reset both down arrows to their original color
         if (shopDownArrow) shopDownArrow.style.stroke = ''; // Reset shop down arrow color
         if (collectionDownArrow) collectionDownArrow.style.stroke = ''; // Reset collections down arrow color
