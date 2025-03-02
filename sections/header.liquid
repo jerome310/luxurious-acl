@@ -29,16 +29,18 @@
 
     .overlay {
         position: relative;
+        z-index: 2;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        padding: 20px;
+        transition: all 0.3s ease-in-out;
         width: 100%;
-        padding: 15px 40px;
     }
 
-    /* .overlay:hover {
+    .overlay.white-background {
         background-color: white;
-    } */
+    }
 
     .logo {
         font-family: 'AustrisaDemo', sans-serif;
@@ -116,13 +118,13 @@
         top: 100%;
         left: 0;
         width: 100%;
-        background-color: #ffffff;
+        background-color: white;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
-        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-        padding: 20px;
+        transition: all 0.3s ease-in-out;
+        z-index: 1;
     }
 
     .shop-menu-wrapper:hover .mega-menu,
@@ -130,7 +132,6 @@
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
-        background-color: white;
     }
 
     .shop-menu-wrapper:hover .overlay {
@@ -165,6 +166,10 @@
 
     .mega-menu-section a:hover {
         color: #666;
+    }
+
+    .nav-links a.underline-black::after {
+        background-color: black;
     }
 </style>
 
@@ -225,34 +230,80 @@
 
 <script>
     // Get the elements
-    const shopMenu = document.querySelector('.shop-menu');
+    const shopMenuWrapper = document.querySelector('.shop-menu-wrapper');
     const overlay = document.querySelector('.overlay');
     const logo = document.querySelector('.logo');
     const navLinks = document.querySelectorAll('.nav-links a');
     const navIcons = document.querySelectorAll('.nav-link-icons svg');
-    const shopDownArrow = document.querySelector('.shop-menu svg'); // Assuming downarrow is an SVG in shop-menu
-    const collectionDownArrow = document.querySelector('.nav-links a[href="#"]:nth-child(3) svg'); // Adjusted selector for Collections downarrow
+    const shopDownArrow = document.querySelector('.shop-menu svg');
+    const collectionDownArrow = document.querySelector('.nav-links a[href="#"]:nth-child(3) svg');
+    const megaMenu = document.querySelector('.mega-menu');
 
-    // Add event listeners for mouse enter and leave
-    shopMenu.addEventListener('mouseenter', () => {
-        overlay.style.backgroundColor = 'white'; // Change overlay background to white on hover
-        logo.style.color = 'black'; // Change logo color to black
-        navLinks.forEach(link => link.style.color = 'black'); // Change nav link colors to black
-        navIcons.forEach(icon => icon.style.color = 'black'); // Change icon colors to black
+    function showMegaMenu() {
+        // Show both backgrounds simultaneously
+        overlay.classList.add('white-background');
+        megaMenu.style.visibility = 'visible';
 
-        // Change both down arrows to black
-        if (shopDownArrow) shopDownArrow.style.stroke = 'black'; // Change shop down arrow color to black
-        if (collectionDownArrow) collectionDownArrow.style.stroke = 'black'; // Change collections down arrow color to black
+        // Update colors immediately
+        logo.style.color = 'black';
+        navLinks.forEach(link => {
+            link.style.color = 'black';
+            link.classList.add('underline-black');
+        });
+        navIcons.forEach(icon => icon.style.color = 'black');
+        if (shopDownArrow) shopDownArrow.style.stroke = 'black';
+        if (collectionDownArrow) collectionDownArrow.style.stroke = 'black';
+
+        // Show mega menu
+        requestAnimationFrame(() => {
+            megaMenu.style.opacity = '1';
+            megaMenu.style.transform = 'translateY(0)';
+        });
+    }
+
+    function hideMegaMenu() {
+        // Hide mega menu
+        megaMenu.style.opacity = '0';
+        megaMenu.style.transform = 'translateY(-10px)';
+
+        // Remove white background and reset colors
+        overlay.classList.remove('white-background');
+        logo.style.color = '';
+        navLinks.forEach(link => {
+            link.style.color = '';
+            link.classList.remove('underline-black');
+        });
+        navIcons.forEach(icon => icon.style.color = '');
+        if (shopDownArrow) shopDownArrow.style.stroke = '';
+        if (collectionDownArrow) collectionDownArrow.style.stroke = '';
+
+        // Hide mega menu after transition
+        setTimeout(() => {
+            megaMenu.style.visibility = 'hidden';
+        }, 300); // Match the transition duration
+    }
+
+    let timeoutId;
+
+    shopMenuWrapper.addEventListener('mouseenter', () => {
+        clearTimeout(timeoutId);
+        showMegaMenu();
     });
 
-    shopMenu.addEventListener('mouseleave', () => {
-        overlay.style.backgroundColor = ''; // Reset overlay background when not hovering
-        logo.style.color = ''; // Reset logo color
-        navLinks.forEach(link => link.style.color = ''); // Reset nav link colors
-        navIcons.forEach(icon => icon.style.color = ''); // Reset icon colors
+    megaMenu.addEventListener('mouseenter', () => {
+        clearTimeout(timeoutId);
+        showMegaMenu();
+    });
 
-        // Reset both down arrows to their original color
-        if (shopDownArrow) shopDownArrow.style.stroke = ''; // Reset shop down arrow color
-        if (collectionDownArrow) collectionDownArrow.style.stroke = ''; // Reset collections down arrow color
+    shopMenuWrapper.addEventListener('mouseleave', (e) => {
+        if (!e.relatedTarget || !e.relatedTarget.closest('.mega-menu')) {
+            timeoutId = setTimeout(hideMegaMenu, 100);
+        }
+    });
+
+    megaMenu.addEventListener('mouseleave', (e) => {
+        if (!e.relatedTarget || !e.relatedTarget.closest('.shop-menu-wrapper')) {
+            timeoutId = setTimeout(hideMegaMenu, 100);
+        }
     });
 </script>
