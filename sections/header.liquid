@@ -38,8 +38,19 @@
         width: 100%;
     }
 
-    .overlay.white-background {
+    .background-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: transparent;
+        transition: all 0.3s ease-in-out;
+        z-index: 1;
+    }
+
+    .background-wrapper.white-background {
         background-color: white;
+        height: 200px;
     }
 
     .logo {
@@ -118,25 +129,16 @@
         top: 100%;
         left: 0;
         width: 100%;
-        background-color: white;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
-        transition: all 0.3s ease-in-out;
         z-index: 1;
+        padding: 20px 0;
     }
 
     .shop-menu-wrapper:hover .mega-menu,
-    .mega-menu:hover {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-
-    .shop-menu-wrapper:hover .overlay {
-        background-color: white;
-    }
+    .mega-menu:hover {}
 
     .mega-menu-content {
         display: flex;
@@ -180,6 +182,7 @@
             Your browser does not support the video tag.
         </video>
     </div>
+    <div class="background-wrapper"></div>
     <div class="overlay">
         <h1 class="logo">ACL</h1>
         <div class="nav-links">
@@ -238,11 +241,30 @@
     const shopDownArrow = document.querySelector('.shop-menu svg');
     const collectionDownArrow = document.querySelector('.nav-links a[href="#"]:nth-child(3) svg');
     const megaMenu = document.querySelector('.mega-menu');
+    const backgroundWrapper = document.querySelector('.background-wrapper');
+
+    function updateBackgroundHeight() {
+        const overlayHeight = overlay.offsetHeight;
+        const megaMenuHeight = megaMenu.offsetHeight;
+        const totalHeight = overlayHeight + megaMenuHeight;
+
+        // Update the background-wrapper height when showing menu
+        if (backgroundWrapper.classList.contains('white-background')) {
+            backgroundWrapper.style.height = `${totalHeight}px`;
+        }
+    }
 
     function showMegaMenu() {
-        // Show both backgrounds simultaneously
-        overlay.classList.add('white-background');
+        // Show background and menu immediately
+        backgroundWrapper.classList.add('white-background');
         megaMenu.style.visibility = 'visible';
+        megaMenu.style.opacity = '1';
+        megaMenu.style.transform = 'translateY(0)';
+
+        // Update background height
+        requestAnimationFrame(() => {
+            updateBackgroundHeight();
+        });
 
         // Update colors immediately
         logo.style.color = 'black';
@@ -253,21 +275,17 @@
         navIcons.forEach(icon => icon.style.color = 'black');
         if (shopDownArrow) shopDownArrow.style.stroke = 'black';
         if (collectionDownArrow) collectionDownArrow.style.stroke = 'black';
-
-        // Show mega menu
-        requestAnimationFrame(() => {
-            megaMenu.style.opacity = '1';
-            megaMenu.style.transform = 'translateY(0)';
-        });
     }
 
     function hideMegaMenu() {
-        // Hide mega menu
+        // Hide everything immediately
+        megaMenu.style.visibility = 'hidden';
         megaMenu.style.opacity = '0';
         megaMenu.style.transform = 'translateY(-10px)';
+        backgroundWrapper.style.height = '';
+        backgroundWrapper.classList.remove('white-background');
 
-        // Remove white background and reset colors
-        overlay.classList.remove('white-background');
+        // Reset colors
         logo.style.color = '';
         navLinks.forEach(link => {
             link.style.color = '';
@@ -276,11 +294,6 @@
         navIcons.forEach(icon => icon.style.color = '');
         if (shopDownArrow) shopDownArrow.style.stroke = '';
         if (collectionDownArrow) collectionDownArrow.style.stroke = '';
-
-        // Hide mega menu after transition
-        setTimeout(() => {
-            megaMenu.style.visibility = 'hidden';
-        }, 300); // Match the transition duration
     }
 
     let timeoutId;
