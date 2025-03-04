@@ -134,40 +134,90 @@
         visibility: hidden;
         transform: translateY(-10px);
         z-index: 1;
-        padding: 20px 0;
     }
 
-    .shop-menu-wrapper:hover .mega-menu,
-    .mega-menu:hover {}
+    /* .shop-menu-wrapper:hover .mega-menu,
+    .mega-menu:hover {} */
 
     .mega-menu-content {
         display: flex;
+        width: 50%; /* The width of the mega menu */
         justify-content: space-around;
-        padding: 20px;
+        padding-bottom: 40px;
     }
 
     .mega-menu-section {
         text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* This adds space between the stacked items */
     }
 
     .mega-menu-section h3 {
         font-size: 18px;
         font-weight: bold;
-        margin-bottom: 10px;
+        /* margin-bottom: 10px; */
         color: #000;
     }
 
+    .mega-menu-section h1 a {
+        display: inline-block;
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 25px;
+        transition: color 0.3s ease;
+        padding-bottom: 10px;
+        position: relative;
+    }
+
+    .mega-menu-section h1 a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #666;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+
+    .mega-menu-section h1 a:hover::after {
+        transform: scaleX(1);
+    }
+
     .mega-menu-section a {
-        display: block;
-        color: #333;
+        display: inline-block;
+        color: #000;
         text-decoration: none;
         font-size: 16px;
-        margin-bottom: 8px;
         transition: color 0.3s ease;
+        padding-bottom: 5px;
+        position: relative;
+        width: fit-content; /* This ensures the underline only matches the text width */
+    }
+
+    .mega-menu-section a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #666;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+
+    .mega-menu-section a:hover::after {
+        transform: scaleX(1);
     }
 
     .mega-menu-section a:hover {
-        color: #666;
+        color: #000;
     }
 
     .nav-links a.underline-black::after {
@@ -195,17 +245,18 @@
                 <div class="mega-menu">
                     <div class="mega-menu-content">
                         <div class="mega-menu-section">
-                            <h3>Categories</h3>
-                            <a href="#">New Arrivals</a>
-                            <a href="#">Best Sellers</a>
-                            <a href="#">Clothing</a>
-                            <a href="#">Accessories</a>
+                            <h1><a href="#">New Arrivals</a></h1>
+                            <h1><a href="#">Best Sellers</a></h1>
+                            <h1><a href="#">Trending</a></h1>
+                            <h1><a href="#">Affortable</a></h1>
                         </div>
                         <div class="mega-menu-section">
-                            <h3>Featured</h3>
-                            <a href="#">Spring Collection</a>
-                            <a href="#">Limited Edition</a>
-                            <a href="#">Gift Ideas</a>
+                            <h1><a href="#">Shop</a></h1>
+                            <a href="#">Belt Bags</a>
+                            <a href="#">Keychains</a>
+                            <a href="#">Mini Bags</a>
+                            <a href="#">Corner Bookmarks</a>
+                            <a href="#">Card Holders</a>
                         </div>
                     </div>
                 </div>
