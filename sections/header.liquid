@@ -138,7 +138,7 @@
 
     .mega-menu-content {
         display: flex;
-        width: 50%;
+        width: 100%;
         justify-content: space-around;
         padding-bottom: 40px;
     }
@@ -225,7 +225,35 @@
         background-color: transparent;
         z-index: 1;
     }
+
+    /* New Styles for ACL Images */
+    .image-gallery {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .image-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-item img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .image-item p {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #000;
+        font-weight: bold;
+        text-align: center;
+    }
 </style>
+
 
 <section class="video-header">
     <div class="video-container">
@@ -259,6 +287,17 @@
                             <a href="#">Mini Bags</a>
                             <a href="#">Corner Bookmarks</a>
                             <a href="#">Card Holders</a>
+                        </div>
+                        <div class="image-gallery">
+                            <div class="image-item">
+                                <img src="{{ 'acl_pockadot_bag.jpg' | asset_url }}" width="150" height="150" alt="acl pockadot bag">
+                                <p>New Arrivals</p>
+                            </div>
+                            <div class="image-item">
+                                <img src="{{ 'acl_bundle_belt_bags.jpg' | asset_url }}" width="150" height="150"
+                                    alt="acl bundle belt bags">
+                                <p>Best Sellers</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -325,6 +364,8 @@
             link.classList.add('underline-black');
         });
         navIcons.forEach(icon => icon.style.color = 'black');
+        if (shopDownArrow) shopDownArrow.style.stroke = 'black';
+        if (collectionDownArrow) collectionDownArrow.style.stroke = 'black';
     }
 
     function hideMegaMenu() {
@@ -339,6 +380,8 @@
                 link.classList.remove('underline-black');
             });
             navIcons.forEach(icon => icon.style.color = 'white');
+            if (shopDownArrow) shopDownArrow.style.stroke = 'white';
+            if (collectionDownArrow) collectionDownArrow.style.stroke = 'white';
         }, 300);
     }
 
@@ -347,3 +390,4 @@
     megaMenu.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
     megaMenu.addEventListener('mouseleave', hideMegaMenu);
 </script>
+
