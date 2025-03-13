@@ -409,7 +409,7 @@
             margin-left: 0;
             gap: 20px;
         }
-        
+
         .nav-link-icons svg {
             width: 22px;
             height: 22px;
@@ -503,9 +503,34 @@
                     </div>
                 </div>
             </div>
-            <a href="#">Collections <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M6 9l6 6 6-6"></path>
-                </svg></a>
+            <div class="collections-menu-wrapper">
+                <a href="#" class="collections-menu">Collections <svg class="dropdown-arrow"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M6 9l6 6 6-6"></path>
+                    </svg></a>
+                <div class="mega-menu">
+                    <div class="mega-menu-content">
+                        <div class="image-gallery">
+                            <div class="image-item">
+                                <img src="{{ 'Unicorn_belt_bag.jpg' | asset_url }}" alt="acl belt bag">
+                                <p>Bags</p>
+                            </div>
+                            <div class="image-item">
+                                <img src="{{ 'card_holder.jpg' | asset_url }}" alt="acl card holders">
+                                <p>Card Holders</p>
+                            </div>
+                            <div class="image-item">
+                                <img src="{{ 'Keychain.jpg' | asset_url }}" alt="acl keychains">
+                                <p>Keychains</p>
+                            </div>
+                            <div class="image-item">
+                                <img src="{{ 'Corner_bookmark.jpg' | asset_url }}" alt="acl cornder bookmarks">
+                                <p>Corner Bookmarks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <a href="#">Contact</a>
         </div>
 
@@ -528,29 +553,30 @@
 
 <script>
     const shopMenuWrapper = document.querySelector('.shop-menu-wrapper');
+    const collectionsMenuWrapper = document.querySelector('.collections-menu-wrapper');
     const overlay = document.querySelector('.overlay');
     const logo = document.querySelector('.logo');
     const navLinks = document.querySelectorAll('.nav-links a');
     const navIcons = document.querySelectorAll('.nav-link-icons svg');
     const shopDownArrow = document.querySelector('.shop-menu svg');
-    const collectionDownArrow = document.querySelector('.nav-links a[href="#"]:nth-child(3) svg');
-    const megaMenu = document.querySelector('.mega-menu');
+    const collectionDownArrow = document.querySelector('.collections-menu svg');
     const backgroundWrapper = document.querySelector('.background-wrapper');
 
     let hideTimeout;
+    let currentOpenMenu = null;
 
-    function updateBackgroundHeight() {
-        const overlayHeight = overlay.offsetHeight;
-        const megaMenuHeight = megaMenu.offsetHeight;
-        const totalHeight = overlayHeight + megaMenuHeight;
-
-        if (backgroundWrapper.classList.contains('white-background')) {
-            backgroundWrapper.style.height = `${totalHeight}px`;
-        }
-    }
-
-    function showMegaMenu() {
+    function showMegaMenu(menuWrapper) {
         clearTimeout(hideTimeout);
+
+        if (currentOpenMenu && currentOpenMenu !== menuWrapper) {
+            const currentMegaMenu = currentOpenMenu.querySelector('.mega-menu');
+            currentMegaMenu.style.visibility = 'hidden';
+            currentMegaMenu.style.opacity = '0';
+            currentMegaMenu.style.transform = 'translateY(-10px)';
+        }
+
+        currentOpenMenu = menuWrapper;
+        const megaMenu = menuWrapper.querySelector('.mega-menu');
 
         backgroundWrapper.classList.add('white-background');
         megaMenu.style.visibility = 'visible';
@@ -558,7 +584,10 @@
         megaMenu.style.transform = 'translateY(0)';
 
         requestAnimationFrame(() => {
-            updateBackgroundHeight();
+            const overlayHeight = overlay.offsetHeight;
+            const megaMenuHeight = megaMenu.offsetHeight;
+            const totalHeight = overlayHeight + megaMenuHeight;
+            backgroundWrapper.style.height = `${totalHeight}px`;
         });
 
         logo.style.color = 'black';
@@ -571,27 +600,43 @@
         if (collectionDownArrow) collectionDownArrow.style.stroke = 'black';
     }
 
-    function hideMegaMenu() {
+    function hideMegaMenu(menuWrapper) {
         hideTimeout = setTimeout(() => {
-            backgroundWrapper.classList.remove('white-background');
-            megaMenu.style.visibility = 'hidden';
-            megaMenu.style.opacity = '0';
-            megaMenu.style.transform = 'translateY(-10px)';
-            logo.style.color = 'white';
-            navLinks.forEach(link => {
-                link.style.color = 'white';
-                link.classList.remove('underline-black');
-            });
-            navIcons.forEach(icon => icon.style.color = 'white');
-            if (shopDownArrow) shopDownArrow.style.stroke = 'white';
-            if (collectionDownArrow) collectionDownArrow.style.stroke = 'white';
+            if (currentOpenMenu === menuWrapper) {
+                currentOpenMenu = null;
+                const megaMenu = menuWrapper.querySelector('.mega-menu');
+                backgroundWrapper.classList.remove('white-background');
+                megaMenu.style.visibility = 'hidden';
+                megaMenu.style.opacity = '0';
+                megaMenu.style.transform = 'translateY(-10px)';
+                logo.style.color = 'white';
+                navLinks.forEach(link => {
+                    link.style.color = 'white';
+                    link.classList.remove('underline-black');
+                });
+                navIcons.forEach(icon => icon.style.color = 'white');
+                if (shopDownArrow) shopDownArrow.style.stroke = 'white';
+                if (collectionDownArrow) collectionDownArrow.style.stroke = 'white';
+            }
         }, 300);
     }
 
-    shopMenuWrapper.addEventListener('mouseenter', showMegaMenu);
-    shopMenuWrapper.addEventListener('mouseleave', hideMegaMenu);
-    megaMenu.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
-    megaMenu.addEventListener('mouseleave', hideMegaMenu);
+    shopMenuWrapper.addEventListener('mouseenter', () => showMegaMenu(shopMenuWrapper));
+    shopMenuWrapper.addEventListener('mouseleave', () => hideMegaMenu(shopMenuWrapper));
+    collectionsMenuWrapper.addEventListener('mouseenter', () => showMegaMenu(collectionsMenuWrapper));
+    collectionsMenuWrapper.addEventListener('mouseleave', () => hideMegaMenu(collectionsMenuWrapper));
+
+    const megaMenus = document.querySelectorAll('.mega-menu');
+    megaMenus.forEach(megaMenu => {
+        megaMenu.addEventListener('mouseenter', () => {
+            const menuWrapper = megaMenu.closest('.shop-menu-wrapper') || megaMenu.closest('.collections-menu-wrapper');
+            clearTimeout(hideTimeout);
+        });
+        megaMenu.addEventListener('mouseleave', () => {
+            const menuWrapper = megaMenu.closest('.shop-menu-wrapper') || megaMenu.closest('.collections-menu-wrapper');
+            hideMegaMenu(menuWrapper);
+        });
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         const hamburger = document.querySelector('.hamburger');
