@@ -342,6 +342,10 @@
         transform: translateY(0);
     }
 
+    .mobile-nav-links {
+           display: none; /* Show mobile nav links on mobile */
+        }
+
     @media (max-width: 768px) {
         .video-container video {
             position: absolute;
@@ -355,6 +359,10 @@
 
         .nav-links {
             display: none;
+        }
+
+         .mobile-nav-links {
+           display: block; /* Show mobile nav links on mobile */
         }
 
         .hamburger {
@@ -402,51 +410,13 @@
             color: white;
             font-size: 20px;
             padding: 10px;
+            display: block;
             text-align: center;
-        }
-
-        .nav-link-icons {
-            margin-left: 0;
-            gap: 20px;
-        }
-
-        .nav-link-icons svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        /* Adjust overlay padding for mobile */
-        .overlay {
-            padding: 15px 20px;
-            justify-content: space-between;
-        }
-
-        /* Adjust logo size and spacing */
-        .logo {
-            font-size: 40px;
-            margin-right: 0;
-            padding: 5px 10px;
-        }
-
-        /* Adjust icon container spacing */
-        .nav-link-icons {
-            margin-left: 0;
-            gap: 25px;
-            padding-right: 5px;
-        }
-
-        /* Adjust hamburger position */
-        .hamburger {
-            padding-left: 5px;
-        }
-
-        /* Keep icons consistent size */
-        .nav-link-icons svg {
-            width: 24px;
-            height: 24px;
+            text-decoration: none;
         }
     }
 </style>
+
 
 
 <section class="video-header">
@@ -534,6 +504,13 @@
             <a href="#">Contact</a>
         </div>
 
+        <div class="mobile-nav-links">
+            <a href="#">Home</a>
+            <a href="#">Shop</a>
+            <a href="#">Collections</a>
+            <a href="#">Contact</a>
+        </div>
+
         <div class="nav-link-icons">
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -549,7 +526,6 @@
         </div>
     </div>
 </section>
-
 
 <script>
     const shopMenuWrapper = document.querySelector('.shop-menu-wrapper');
@@ -638,13 +614,17 @@
         });
     });
 
+    // Hamburger menu functionality
     document.addEventListener('DOMContentLoaded', function () {
         const hamburger = document.querySelector('.hamburger');
         const navLinks = document.querySelector('.nav-links');
+        const mobileNavLinks = document.querySelector('.mobile-nav-links');
 
         hamburger.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
+            mobileNavLinks.classList.toggle('active');
+            navLinks.style.display = 'none';  // Hide desktop nav links
+            mobileNavLinks.style.display = 'block';  // Show mobile nav links
         });
     });
 </script>
