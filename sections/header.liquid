@@ -343,8 +343,9 @@
     }
 
     .mobile-nav-links {
-           display: none; /* Show mobile nav links on mobile */
-        }
+        display: none;
+        /* Show mobile nav links on mobile */
+    }
 
     @media (max-width: 768px) {
         .video-container video {
@@ -361,22 +362,76 @@
             display: none;
         }
 
-         .mobile-nav-links {
-           display: block; /* Show mobile nav links on mobile */
+        .mobile-nav-links {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 95%;
+            height: 100vh;
+            background-color: #fff;
+            padding: 80px 0 20px;
+            z-index: 999;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 60px;
         }
 
         .hamburger {
-            display: block;
-            cursor: pointer;
-            z-index: 100;
+            position: absolute;
+            left: 0;
+            z-index: 1001;
+        }
+
+        .logo {
+            font-size: 45px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .nav-link-icons {
+            position: absolute;
+            right: 0;
+            z-index: 1001;
+        }
+
+        .mobile-nav-links a {
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .mobile-nav-links.show {
+            display: flex;
+            /* Make it visible when 'show' class is added */
+        }
+
+        .mobile-nav-links.active {
+            display: flex !important;
+            /* Show when active */
         }
 
         .hamburger-icon {
-            width: 30px;
+            width: 25px;
+            /* Adjust width of each hamburger line */
             height: 3px;
-            background-color: white;
-            margin: 5px 0;
-            transition: 0.3s;
+            /* Adjust height of each hamburger line */
+            background-color: #fff;
+            /* Adjust color */
+            margin: 4px 0;
         }
 
         .hamburger.active .hamburger-icon:nth-child(1) {
@@ -413,6 +468,16 @@
             display: block;
             text-align: center;
             text-decoration: none;
+        }
+
+        .overlay {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            margin: 0 auto;
+            padding: 10px;
+            position: relative;
         }
     }
 </style>
@@ -605,7 +670,6 @@
     const megaMenus = document.querySelectorAll('.mega-menu');
     megaMenus.forEach(megaMenu => {
         megaMenu.addEventListener('mouseenter', () => {
-            const menuWrapper = megaMenu.closest('.shop-menu-wrapper') || megaMenu.closest('.collections-menu-wrapper');
             clearTimeout(hideTimeout);
         });
         megaMenu.addEventListener('mouseleave', () => {
@@ -620,11 +684,42 @@
         const navLinks = document.querySelector('.nav-links');
         const mobileNavLinks = document.querySelector('.mobile-nav-links');
 
+        // Function to handle responsive behavior
+        function handleResponsiveMenu() {
+            if (window.innerWidth > 768) {
+                // Reset everything for desktop view
+                navLinks.style.display = 'flex';
+                mobileNavLinks.style.display = 'none';
+                mobileNavLinks.classList.remove('active', 'show');
+                hamburger.classList.remove('active');
+            } else {
+                // Mobile view - only reset if menu is not active
+                if (!mobileNavLinks.classList.contains('active')) {
+                    navLinks.style.display = 'none';
+                    mobileNavLinks.style.display = 'none';
+                }
+            }
+        }
+
+        // Add resize event listener
+        window.addEventListener('resize', handleResponsiveMenu);
+
+        // Initial check
+        handleResponsiveMenu();
+
+        // Hamburger click handler
         hamburger.addEventListener('click', function () {
-            hamburger.classList.toggle('active');
+            this.classList.toggle('active');
             mobileNavLinks.classList.toggle('active');
-            navLinks.style.display = 'none';  // Hide desktop nav links
-            mobileNavLinks.style.display = 'block';  // Show mobile nav links
+            mobileNavLinks.classList.toggle('show');
+
+            if (mobileNavLinks.classList.contains('active')) {
+                navLinks.style.display = 'none';
+                mobileNavLinks.style.display = 'flex';
+            } else {
+                navLinks.style.display = 'none';
+                mobileNavLinks.style.display = 'none';
+            }
         });
     });
 </script>
