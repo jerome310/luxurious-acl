@@ -388,6 +388,12 @@
             align-items: center;
             padding: 0 0 20px;
             z-index: 9999;
+            height: 100vh;
+            /* Full viewport height */
+            overflow-y: auto;
+            /* Enable scrolling */
+            padding-bottom: 50px;
+            /* Add padding at bottom for scrolling */
         }
 
         .mobile-nav-links.show {
@@ -460,6 +466,30 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            position: relative;
+        }
+
+        .mobile-nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background-color: #333;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Ensure the underline doesn't appear under the arrow */
+        .mobile-nav-links a .nav-arrow {
+            margin-left: 10px;
+            z-index: 1;
         }
 
         .mobile-nav-header {
@@ -468,7 +498,6 @@
             align-items: center;
             width: 100%;
             padding: 20px;
-            border-bottom: 1px solid #eee;
             margin-bottom: 20px;
             position: relative;
             z-index: 10000;
@@ -500,6 +529,7 @@
             margin-top: 20px;
             width: 100%;
             padding: 0 20px;
+            margin-bottom: 0;
         }
 
         .overlay {
@@ -509,14 +539,12 @@
         }
 
         .social-icons {
-            position: absolute;
-            bottom: 40px;
-            left: 0;
-            width: 100%;
+            position: relative;
+            top: 170px;
             display: flex;
             justify-content: center;
             gap: 30px;
-            padding: 20px 0;
+            padding: 50px 0 0;
         }
 
         .social-icons svg {
@@ -538,6 +566,134 @@
             stroke: #333;
             stroke-width: 2;
             transform: rotate(-90deg);
+        }
+
+        .navbar a {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: none;
+            /* Remove default transition */
+        }
+
+        /* Add animation delays for each link */
+        .navbar.animate a:nth-child(1) {
+            animation: slideIn 0.5s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .navbar.animate a:nth-child(2) {
+            animation: slideIn 0.5s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        .navbar.animate a:nth-child(3) {
+            animation: slideIn 0.5s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .navbar.animate a:nth-child(4) {
+            animation: slideIn 0.5s ease forwards;
+            animation-delay: 1.2s;
+        }
+
+        /* Define the slideIn animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Style for mobile image gallery */
+        .mobile-shop-gallery {
+            display: none;
+            padding: 20px;
+            width: 75%;
+            margin: 0 auto;
+            padding-bottom: 40px;
+            /* Add extra padding at bottom */
+        }
+
+        .mobile-shop-gallery.show {
+            display: block;
+            /* Only show when .show class is applied */
+        }
+
+        .mobile-shop-gallery .image-item {
+            margin-bottom: 35px;
+            /* Increased space between images */
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .mobile-shop-gallery .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mobile-shop-gallery .image-item p {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            padding: 5px 10px;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            width: 90%;
+        }
+
+        .back-nav-container {
+            display: none;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .back-nav-container.show {
+            display: flex;
+        }
+
+        .back-arrow {
+            width: 26px;
+            height: 26px;
+            fill: none;
+            stroke: #333;
+            stroke-width: 2;
+            transform: rotate(90deg);
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        .back-nav-container span {
+            margin-left: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Remove underline animation specifically for main menu links */
+        .navbar a::after {
+            display: none;
+            /* Remove underline only for main menu links */
+        }
+
+        /* Keep the slide-in animation styles */
+        .navbar a {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: none;
         }
     }
 </style>
@@ -810,21 +966,27 @@
 
         // Hamburger click handler
         hamburger.addEventListener('click', function () {
-            // Hide the hamburger icon
             this.style.visibility = 'hidden';
-
-            // Show mobile menu with initial position
             mobileNavLinks.style.display = 'flex';
-
-            // Force a reflow before starting the animation
             mobileNavLinks.offsetHeight;
-
-            // Start the slide-in animation
             mobileNavLinks.classList.add('active', 'show');
             navLinks.style.display = 'none';
-
-            // Disable scrolling
             document.body.classList.add('no-scroll');
+
+            // Reset animations
+            navbarDiv.classList.remove('animate');
+            // Reset all nav links to initial state
+            const navItems = navbarDiv.querySelectorAll('a');
+            navItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+            });
+
+            // Force reflow
+            navbarDiv.offsetHeight;
+
+            // Start animation
+            navbarDiv.classList.add('animate');
         });
 
         // Add this inside your DOMContentLoaded event listener
@@ -846,10 +1008,102 @@
 
             // Wait for animation to complete before hiding the mobile nav
             setTimeout(() => {
-                // Hide mobile menu
                 mobileNavLinks.style.display = 'none';
                 mobileNavLinks.classList.remove('sliding-out');
+
+                // Reset to main menu state AFTER sliding animation
+                if (isShopView) {
+                    const mobileGallery = document.querySelector('.mobile-shop-gallery');
+                    const backNavContainer = document.querySelector('.back-nav-container');
+                    mobileGallery.classList.remove('show');
+                    backNavContainer.classList.remove('show');
+                    navbarDiv.style.display = 'flex';
+                    socialIcons.style.display = 'flex';
+                    isShopView = false;
+                }
             }, 600);
+        });
+
+        // Add a state variable to track if we're in shop view
+        let isShopView = false;
+
+        const shopLink = document.querySelector('.navbar a:nth-child(2)');
+        const navbarDiv = document.querySelector('.navbar');
+        const socialIcons = document.querySelector('.social-icons');
+
+        // Create and append the mobile gallery
+        const mobileGallery = document.createElement('div');
+        mobileGallery.className = 'mobile-shop-gallery';
+        mobileGallery.innerHTML = `
+            <div class="image-item">
+                <img src="{{ 'acl_pockadot_bag.jpg' | asset_url }}" alt="acl pockadot bag">
+                <p>New Arrivals</p>
+            </div>
+            <div class="image-item">
+                <img src="{{ 'acl_bundle_belt_bags.jpg' | asset_url }}" alt="acl bundle belt bags">
+                <p>Best Sellers</p>
+            </div>
+        `;
+        document.querySelector('.mobile-nav-links').appendChild(mobileGallery);
+
+        // Create and append the back navigation container
+        const backNavContainer = document.createElement('div');
+        backNavContainer.className = 'back-nav-container';
+        backNavContainer.innerHTML = `
+            <svg class="back-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+            <span>Shop</span>
+        `;
+        document.querySelector('.mobile-nav-links').insertBefore(backNavContainer, mobileGallery);
+
+        const backArrowElement = backNavContainer.querySelector('.back-arrow');
+
+        function showShopView() {
+            isShopView = true;
+            navbarDiv.style.display = 'none';
+            socialIcons.style.display = 'none';
+            mobileGallery.classList.add('show');
+            backNavContainer.classList.add('show');
+        }
+
+        function showMainMenu() {
+            isShopView = false;
+            navbarDiv.style.display = 'flex';
+            socialIcons.style.display = 'flex';
+            mobileGallery.classList.remove('show');
+            backNavContainer.classList.remove('show');
+
+            // Reset animations
+            navbarDiv.classList.remove('animate');
+            // Reset all nav links to initial state
+            const navItems = navbarDiv.querySelectorAll('a');
+            navItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+            });
+
+            // Force reflow
+            navbarDiv.offsetHeight;
+
+            // Start animation
+            navbarDiv.classList.add('animate');
+        }
+
+        // Add click event for both back arrow and shop text
+        backNavContainer.addEventListener('click', showMainMenu);
+
+        // Update existing shop link click handlers
+        shopLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            showShopView();
+        });
+
+        const shopArrow = shopLink.querySelector('.nav-arrow');
+        shopArrow.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showShopView();
         });
     });
 </script>
