@@ -696,6 +696,30 @@
             transition: none;
         }
     }
+
+    .shop-text {
+        text-align: center;
+        /* Center the text */
+        color: black;
+        /* Ensure text color is black */
+        margin-bottom: 20px;
+        /* Space between text and images */
+    }
+
+    .image-item p {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff;
+        /* Set text color to white */
+        padding: 5px 10px;
+        font-size: 25px;
+        border-radius: 5px;
+        width: 90%;
+        font-weight: bold;
+        text-align: center;
+    }
 </style>
 
 
@@ -1035,13 +1059,24 @@
         const mobileGallery = document.createElement('div');
         mobileGallery.className = 'mobile-shop-gallery';
         mobileGallery.innerHTML = `
-            <div class="image-item">
-                <img src="{{ 'acl_pockadot_bag.jpg' | asset_url }}" alt="acl pockadot bag">
-                <p>New Arrivals</p>
+            
+            <h3 style="font-size: 25px; font-weight: bold; color: #000;">New Arrivals</h3>
+            <h3 style="font-size: 25px; font-weight: bold; color: #000;">Best Sellers</h3>
+            <h3 style="font-size: 25px; font-weight: bold; color: #000;">Trending</h3>
+            <h3 style="font-size: 25px; font-weight: bold; color: #000;">Affordable</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 0px;">
+                <h3 style="font-size: 25px; font-weight: bold; color: #000; margin: 0;">Shop</h3>
+                <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 30px; height: 30px;">
+                    <path d="M6 9l6 6 6-6"></path>
+                </svg>
             </div>
-            <div class="image-item">
+            <div class="image-item" style="margin-top: 20px;">
+                <img src="{{ 'acl_pockadot_bag.jpg' | asset_url }}" alt="acl pockadot bag">
+                <p style="color: white;">New Arrivals</p>
+            </div>
+            <div class="image-item" style="margin-top: 20px;">
                 <img src="{{ 'acl_bundle_belt_bags.jpg' | asset_url }}" alt="acl bundle belt bags">
-                <p>Best Sellers</p>
+                <p style="color: white;">Best Sellers</p>
             </div>
         `;
         document.querySelector('.mobile-nav-links').appendChild(mobileGallery);
@@ -1105,5 +1140,9 @@
             e.stopPropagation();
             showShopView();
         });
+
+        // Add event listener for the back button
+        const backButton = document.querySelector('.back-button');
+        backButton.addEventListener('click', showMainMenu);
     });
 </script>
